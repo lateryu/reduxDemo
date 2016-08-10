@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+HEAD
 ```
 npm install
 npm run server
@@ -21,8 +21,49 @@ redux的demo
   * state 以单一对象存储在 store 对象中
   * state 只读
   * 使用纯函数 reducer 执行 state 更新
-> state 为单一对象，使得 Redux 只需要维护一棵状态树，服务端很容易初始化状态，易于服务器渲染。state 只能通过 dispatch(action) 来触发更新，更新逻辑由 reducer 来执行。
+> state 为单一对象，使得 Redux 只需要维护一棵状态树，服务端很容易初始化状态，易于服务器渲染。state 只能通过 dispatch(action) 来触发更新，更新逻辑由 reducer 来执行。  
 
+## 简单入门
+```js
+// 首先定义一个改变数据的plain函数，成为reducer
+function count (state, action) {
+    var defaultState = {
+        year: 2015,
+      };
+    state = state || defaultState;
+    switch (action.type) {
+        case 'add':
+            return {
+                year: state.year + 1
+            };
+        case 'sub':
+            return {
+                year: state.year - 1
+            }
+        default :
+            return state;
+    }
+}
+
+// store的创建
+var createStore = require('redux').createStore;
+var store = createStore(count);
+
+// store里面的数据发生改变时，触发的回调函数
+store.subscribe(function () {
+      console.log('the year is: ', store.getState().year);
+});
+
+// action: 触发state改变的唯一方法(按照redux的设计思路)
+var action1 = { type: 'add' };
+var action2 = { type: 'add' };
+var action3 = { type: 'sub' };
+
+// 改变store里面的方法
+store.dispatch(action1); // 'the year is: 2016
+store.dispatch(action2); // 'the year is: 2017
+store.dispatch(action3); // 'the year is: 2016
+```
 ## Actions、Reducers 和 Store
 
 ### 1.store 是一个单一对象：
